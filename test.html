@@ -2,23 +2,49 @@
 <html>
 <head>
 	<script>
-	var x=1;	
+	var x=1;
+	var se=null;
+	var vselect;//bien select;
+	// var array_search=[]; 
 	function validateForm(array,kt) {
-		//tao the tr ;
+		//tao selected
+		var kt_opt=0;
+		se=document.getElementById('search').value;
+		se=document.getElementById('search').value;
+		vselect=document.getElementById('selected').value;
+		if(x==1){
+			for(var i=0;i<array.length-2;i++){
+				var op=document.createElement('option');
+				op.id="op_"+array[i];
+				document.getElementById('selected').appendChild(op);
+				document.getElementById(op.id).value=array[i];
+				document.getElementById(op.id).innerHTML=array[i];
+			}
+		}
+		// uu tien the tim kiem ;  lay gia tri tim kiem 
+		//tao the tr;
 		if(kt!=0){
 			var k=x;
 			x=kt;
-		}else{
+		}
+		if(kt==0 && se!=""){
+			y=x;
+		}
+		if(kt==0 && se==""){
 			var tr=document.createElement('tr');
 			tr.id='id_tr'+x;
 			document.getElementById("demo").appendChild(tr); 
 		}
 		for ( var i=0; i<array.length;i++){
+
 			var b=array[i];
 			id_td=""+b+x;
+			// document.getElementById('id_tr').style.display="block";
 			// tao td
-			if(kt==0) {
+			// khi khong thuc hien edit va khong thuc hien search  ; 
+			if(kt==0 && se=="") {
 				var y=x;
+				document.getElementById('exists_se').innerHTML='';
 				// tao th td va edit ();
 				var td = document.createElement('td');
 				if (b == "edit") {
@@ -41,11 +67,47 @@
 				td.id = id_td;
 				document.getElementById(tr.id).appendChild(td);
 			}
-			document.getElementById(id_td).innerHTML= document.forms["myForm"][b].value;
+			// thuc hien search 
+			if(kt==0 && se!=""){
+				if(document.getElementById('name').value|| document.getElementById('pass').value){
+					document.getElementById('exists_se').innerHTML='neu con tồn tại searh ban khong thể thêmm';
+				}
+				if(array[i]==vselect){
+					var kt_opt=1;
+					x=x-1;
+					console.log(se);
+					for(var i=1;i<=x;i++){
+						var number_search=vselect+i+"";
+						// console.log('search');
+						var check_search=document.getElementById(number_search);
+						if(typeof(check_search)!=undefined && check_search!=null){
+							if(check_search.innerHTML.search(se)==-1){
+								var c='id_tr'+i;
+								document.getElementById(c).style.display="none";
+							}
+							else{
+								document.getElementById('id_tr'+i).style.display="table-row";
+							}
+						}
+					}
+				}
+			}
+			// bat gia tri cua search 
+			if(kt!=0||se=="")
+				document.getElementById(id_td).innerHTML= document.forms["myForm"][b].value;
 		}
 		if(kt!=0){
 			x=k-1;
 			document.getElementById('bt1').value=0;
+		}
+		if(kt_opt==0){
+			for(var i=1;i<=x;i++){
+				var number_search=vselect+i+"";
+				var check_search=document.getElementById(number_search);
+				if(typeof(check_search)!=undefined && check_search!=null){
+					document.getElementById('id_tr'+i).style.display="table-row";
+				}
+			}
 		}
 		x++;
 	}
@@ -53,7 +115,7 @@
 </head>
 <body>
 	<form name="myForm" action=""method="post">
-		id: <br/>
+		<br/>id: <br/>
 		<input type="text" id="id" name="id">
 		<br/>name:<br/>
 		<input type="text" id="name" name="name">
@@ -68,6 +130,13 @@
 		<input type="hidden" id='edit' name ="edit" value="edit">
 		<input type="hidden" id="delete" name="delete" value="delete"> 
 		<br/>
+		<br/>search:<br/>
+		<input type="text" id ="search" name="search">
+		<br/>
+		<select name="feilds_search" id="selected">
+		</select>
+		<br/>
+		<span style="color:red"id="exists_se"></span>
 		<button type="button" id="bt1" style="display:block" onclick="validateForm(['id','name','pass','age','address','phone','edit','delete'],this.value)" value="0">submit</button>
 	</form>
 	<table border="1">
@@ -84,5 +153,6 @@
 		<tbody id="demo">
 		</tbody>
 	</table>
+
 </body>
 </html>
