@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script>
+	var x=1;	
+	function validateForm(array,kt) {
+		//tao the tr ;
+		if(kt!=0){
+			var k=x;
+			x=kt;
+		}else{
+			var tr=document.createElement('tr');
+			tr.id='id_tr'+x;
+			document.getElementById("demo").appendChild(tr); 
+		}
+		for ( var i=0; i<array.length;i++){
+			var b=array[i];
+			id_td=""+b+x;
+			// tao td
+			if(kt==0) {
+				var y=x;
+				// tao th td va edit ();
+				var td = document.createElement('td');
+				if (b == "edit") {
+					td.onclick = function () {
+						for (var i = 0; i < array.length - 2; i++) {
+							var a = array[i];
+							document.getElementById(a).value = document.getElementById(a + y).innerHTML;
+						}
+						document.getElementById('bt1').value = y;
+					}
+				}
+				if(b=="delete"){
+					td.onclick=function(){
+						if(document.getElementById('bt1').value != y ){
+							var child=document.getElementById(tr.id);
+							document.getElementById('demo').removeChild(child);
+						}
+					}
+				}
+				td.id = id_td;
+				document.getElementById(tr.id).appendChild(td);
+			}
+			document.getElementById(id_td).innerHTML= document.forms["myForm"][b].value;
+		}
+		if(kt!=0){
+			x=k-1;
+			document.getElementById('bt1').value=0;
+		}
+		x++;
+	}
+	</script>
+</head>
+<body>
+	<form name="myForm" action=""method="post">
+		id: <br/>
+		<input type="text" id="id" name="id">
+		<br/>name:<br/>
+		<input type="text" id="name" name="name">
+		<br/>pass:<br/>
+		<input type="text" id="pass" name="pass">
+		<br/>age:<br/>
+		<input type="number" id="age" name="age">
+		<br/>address:<br/>
+		<input type="text" id="address" name="address">
+		<br/>phone</br>
+		<input type="number" id="phone" name="phone">
+		<input type="hidden" id='edit' name ="edit" value="edit">
+		<input type="hidden" id="delete" name="delete" value="delete"> 
+		<br/>
+		<button type="button" id="bt1" style="display:block" onclick="validateForm(['id','name','pass','age','address','phone','edit','delete'],this.value)" value="0">submit</button>
+	</form>
+	<table border="1">
+		<tr>
+			<th>id</th>
+			<th>name</th>
+			<th>pass</th>
+			<th>age</th>
+			<th>address</th>
+			<th>phone</th>
+			<th>edit</th>
+			<th>delete</th>
+		</tr>
+		<tbody id="demo">
+		</tbody>
+	</table>
+</body>
+</html>
